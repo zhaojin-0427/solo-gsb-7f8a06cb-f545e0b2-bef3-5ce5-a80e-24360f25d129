@@ -1,0 +1,22 @@
+services:
+  parser-service:
+    build: .
+    image: local-doc-parser:latest
+    container_name: parser-service
+    ports:
+      - "8000:8000"
+    volumes:
+      - parser-data:/data
+    environment:
+      PARSER_DB: /data/parser.db
+      PARSER_WORKERS_PER_VERSION: "2"
+      PARSER_TASK_TIMEOUT_SECONDS: "30"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health').status==200 else 1)"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  parser-data:
