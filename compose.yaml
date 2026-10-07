@@ -1,0 +1,16 @@
+services:
+  app:
+    build: .
+    image: docparse-plugin-service
+    ports:
+      - "8000:8000"
+    environment:
+      DB_PATH: /data/app.db
+      POOL_MAX_WORKERS_PER_VERSION: "4"
+      TASK_DEFAULT_TIMEOUT_MS: "30000"
+    volumes:
+      - app-data:/data
+    restart: unless-stopped
+
+volumes:
+  app-data:
